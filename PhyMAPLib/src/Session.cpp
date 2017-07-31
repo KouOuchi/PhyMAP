@@ -94,14 +94,34 @@ void Session::update(float _time_since_last)
       Translator translator;
       for each(auto kv in rigid_bodies_)
       {
-        Transform trans;
-        kv.Value->rigid_body_->getTransform(&trans);
+        Transform trans_native;
+        kv.Value->rigid_body_->getTransform(&trans_native);
 
-        Rhino::Geometry::Transform tran = Rhino::Geometry::Transform::Identity;
-        tran.Translation(trans.position_.v_[0], trans.position_.v_[1],
-                         trans.position_.v_[2]);
+#ifdef _DEBUG
+        std::cout << "rigid_body transform(vec) :" << trans_native.position_.v_[0] <<
+                  "," <<
+                  trans_native.position_.v_[1] << "," << trans_native.position_.v_[2] <<
+                  std::endl;
+        std::cout << "rigid_body transform(qt) :" << trans_native.orientation_.q_[0] <<
+                  "," <<
+                  trans_native.orientation_.q_[1] << "," << trans_native.orientation_.q_[2] 
+			      << "," << trans_native.orientation_.q_[3] << std::endl;
+#endif
 
-        if (!tran.IsValid)
+		Rhino::Geometry::Transform^ trans_net = gcnew Rhino::Geometry::Transform();
+        Translator().nativeToNet<Transform, Rhino::Geometry::Transform>(trans_native,
+            trans_net);
+
+#ifdef _DEBUG
+        {
+          std::string mes;
+          translator.netToNative<System::String, std::string>(trans_net->ToString(),
+              &mes);
+          std::cout << "internal transform(debug) :" << mes.c_str() << std::endl;
+        }
+#endif
+
+        if (!trans_net->IsValid)
         {
           std::cout << "transform invalid." << std::endl;
           continue;
@@ -109,7 +129,8 @@ void Session::update(float _time_since_last)
         else
         {
           std::string mes;
-          translator.netToNative<System::String, std::string>(tran.ToString(), &mes);
+          translator.netToNative<System::String, std::string>(trans_net->ToString(),
+              &mes);
           std::cout << "internal transform :" << mes.c_str() << std::endl;
         }
 
@@ -121,13 +142,13 @@ void Session::update(float _time_since_last)
             continue;
           }
 
-          if (!tran.IsValid)
+          if (!trans_net->IsValid)
           {
             std::cout << "transform of mesh is invalid." << std::endl;
             continue;
           }
 
-		  if (!mesh->Transform(tran))
+          if (!mesh->Transform(*trans_net))
           {
             std::cout << "internal transform failure." << std::endl;
           }

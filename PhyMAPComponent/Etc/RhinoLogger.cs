@@ -9,11 +9,11 @@ namespace RhinoToOgre
 {
     public enum LogLevel
     {
-        Fatal = 1,
-        Error,
-        Warn,
-        Info,
-        Debug
+        Debug = 1,
+        Info = 2,
+        Warn = 3,
+        Error = 4,
+        Fatal = 5
     }
 
     public static class RhinoLogger
@@ -144,7 +144,6 @@ namespace RhinoToOgre
             get { return _currentLogLevel; }
             set { _currentLogLevel = value; }
         }
-
         private static void Print(LogLevel logLevel, object message, Exception exception)
         {
             Print(logLevel, string.Format("{0} {1}", message, exception.StackTrace) );
@@ -161,10 +160,9 @@ namespace RhinoToOgre
         {
             Print(logLevel, string.Format(format, arg0, arg1, arg2));
         }
-
         private static bool IsBiggerThanCurrentLogLevel(LogLevel logLevel)
         {
-            return logLevel >= CurrentLogLevel;
+            return (int)logLevel >= (int)CurrentLogLevel;
         }
         private static void Print(LogLevel logLevel, object message)
         {

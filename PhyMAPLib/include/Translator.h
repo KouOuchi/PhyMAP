@@ -39,6 +39,20 @@ ref struct Translator
   }
 
   template <>
+  void netToNative<Rhino::Geometry::Quaternion, Quaternion>(
+    Rhino::Geometry::Quaternion^ _source, Quaternion* _target)
+  {
+    _target->assign(Quaternion(_source->B, _source->C, _source->D, _source->A));
+  }
+
+  template <>
+  void nativeToNet<Quaternion, Rhino::Geometry::Quaternion>(
+    const Quaternion& _source, Rhino::Geometry::Quaternion^ _target)
+  {
+    _target->Set(_source.q_[3], _source.q_[0], _source.q_[1], _source.q_[2]);
+  }
+
+  template <>
   void netToNative<Rhino::Geometry::Point3f, Vector>(
     Rhino::Geometry::Point3f^ _source, Vector* _target)
   {
@@ -151,13 +165,13 @@ ref struct Translator
   {
     *_target = Rhino::Geometry::Transform::Identity;
 
-    Rhino::Geometry::Quaternion^ orientation =
-      gcnew Rhino::Geometry::Quaternion(_source.orientation_.q_[3],
-                                        _source.orientation_.q_[0],
-                                        _source.orientation_.q_[1],
-                                        _source.orientation_.q_[2]);
+    Rhino::Geometry::Quaternion^ orientation = gcnew Rhino::Geometry::Quaternion();
+    nativeToNet<Quaternion, Rhino::Geometry::Quaternion>(_source.orientation_,
+        orientation);
 
-    /*
+    if (!orientation->EpsilonEquals(Rhino::Geometry::Quaternion::Identity,
+                                    0.000000001))
+    {
       double angle;
       Rhino::Geometry::Vector3d axis;
       auto rot_trans = orientation->MatrixForm();
@@ -165,27 +179,38 @@ ref struct Translator
       {
         throw std::runtime_error("getting orientation failure.");
       }
-    */
-    _target->Translation(Rhino::Geometry::Vector3d(_source.position_.v_[0],
-                         _source.position_.v_[1],
-                         _source.position_.v_[2]));
-//    _target->Rotation(angle, axis,
-//                      Rhino::Geometry::Point3f(_source.position_.v_[0], _source.position_.v_[1],
-//                          _source.position_.v_[2]));
-    /*
 
-          for (const int row : { 0, 1, 2 })
-          {
-            for (const int col : { 0, 1, 2, 3})
-            {
-              (*_target)[row, col] = rot_trans[row, col];
-            }
-          }
-          (*_target)[3, 0] = _source.position_.v_[0];
-          (*_target)[3, 1] = _source.position_.v_[1];
-          (*_target)[3, 2] = _source.position_.v_[2];
-          (*_target)[3, 3] = 1.0;
-    */
+      /*
+      	  for (const int row : { 0, 1, 2 })
+      	  {
+      		for (const int col : { 0, 1, 2, 3})
+      		{
+      		  (*_target)[row, col] = rot_trans[row, col];
+      		}
+      	  }
+      	  (*_target)[3, 0] = _source.position_.v_[0];
+      	  (*_target)[3, 1] = _source.position_.v_[1];
+      	  (*_target)[3, 2] = _source.position_.v_[2];
+      	  (*_target)[3, 3] = 1.0;
+      */
+      _target->Rotation(angle, axis, Rhino::Geometry::Point3f::Origin);
+    }
+
+	_target->M03 = _source.position_.v_[0];
+	_target->M13 = _source.position_.v_[1];
+	_target->M23 = _source.position_.v_[2];
+
+#ifdef _DEBUG
+    {
+      std::cout << "internal transform(debugXXX) :" << _source.position_.v_[2] <<
+                std::endl;
+      std::string mes;
+      netToNative<System::String, std::string>(_target->ToString(),
+          &mes);
+      std::cout << "internal transform(debugXXX) :" << mes.c_str() << std::endl;
+    }
+#endif
+
   }
 
   template <>
