@@ -193,24 +193,13 @@ ref struct Translator
       	  (*_target)[3, 2] = _source.position_.v_[2];
       	  (*_target)[3, 3] = 1.0;
       */
-      _target->Rotation(angle, axis, Rhino::Geometry::Point3f::Origin);
+      *_target *= Rhino::Geometry::Transform::Rotation(angle, axis, Rhino::Geometry::Point3f::Origin);
     }
 
-	_target->M03 = _source.position_.v_[0];
-	_target->M13 = _source.position_.v_[1];
-	_target->M23 = _source.position_.v_[2];
-
-#ifdef _DEBUG
-    {
-      std::cout << "internal transform(debugXXX) :" << _source.position_.v_[2] <<
-                std::endl;
-      std::string mes;
-      netToNative<System::String, std::string>(_target->ToString(),
-          &mes);
-      std::cout << "internal transform(debugXXX) :" << mes.c_str() << std::endl;
-    }
-#endif
-
+	*_target *= Rhino::Geometry::Transform::Translation(
+		_source.position_.v_[0],
+		_source.position_.v_[1],
+		_source.position_.v_[2]);
   }
 
   template <>

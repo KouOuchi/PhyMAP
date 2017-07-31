@@ -12,7 +12,7 @@ namespace PhyMAP
 namespace Bullet
 {
 
-void NearCallback(btBroadphasePair& collisionPair,
+void nearCallback(btBroadphasePair& collisionPair,
                   btCollisionDispatcher& dispatcher, btDispatcherInfo& dispatchInfo)
 {
   std::cout << "detect collision." << std::endl;
@@ -36,24 +36,24 @@ void BulletSolverInstance::initialize()
 
   //Bullet initialisation.
   mBroadphase = new btDbvtBroadphase();
-//	  btAxisSweep3(btVector3(-10000, -10000, -10000),
-//                                 btVector3(10000, 10000, 10000), 1024);
+  //	  btAxisSweep3(btVector3(-10000, -10000, -10000),
+  //                                 btVector3(10000, 10000, 10000), 1024);
   mCollisionConfig = new btDefaultCollisionConfiguration();
   mDispatcher = new btCollisionDispatcher(mCollisionConfig);
   mSolver = new btSequentialImpulseConstraintSolver();
-
+  mDispatcher->setNearCallback((btNearCallback)
+                               &PhyMAP::Bullet::nearCallback);
   phyWorld = new btDiscreteDynamicsWorld(mDispatcher, mBroadphase, mSolver,
                                          mCollisionConfig);
 
   btVector3 btGravity;
   Converter().Convert<Vector, btVector3>(gravity_, &btGravity);
-  std::cout << "BulletSolverInstance::gravity is set to " << btGravity.x() << "," <<
+
+  std::cout << "BulletSolverInstance::gravity is set to " << btGravity.x() << ","
+            <<
             btGravity.y() << "," << btGravity.z() << std::endl;
 
   phyWorld->setGravity(btGravity);
-  mDispatcher->setNearCallback((btNearCallback)
-                               PhyMAP::Bullet::NearCallback);
-
 }
 void BulletSolverInstance::deinitialize(void)
 {

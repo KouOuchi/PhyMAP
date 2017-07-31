@@ -180,19 +180,14 @@ namespace PhyMAPComponent
                 {
                     if (!CheckAfterSolveInstanceCondition()) return;
 
-                    DateTime base_time = DateTime.Now;
-                    TimeSpan time_span;
                     double total_duration = 0;
                     while(true)
                     {
-                        time_span = DateTime.Now - base_time;
-                        total_duration = time_span.TotalSeconds;
                         UpdateSession();
-
-                        RhinoDoc.ActiveDoc.Views.Redraw();
 
                         SleepSession();
 
+                        total_duration += info.getInfo().Item2;
                         if (total_duration > info.getInfo().Item3)
                         {
                             break;
@@ -252,8 +247,11 @@ namespace PhyMAPComponent
 
         private void UpdateSession()
         {
-            if(session != null)
+            if (session != null)
+            {
                 session.update(info.getInfo().Item2);
+                RhinoDoc.ActiveDoc.Views.Redraw();
+            }
         }
 
         private void InitializeSession()

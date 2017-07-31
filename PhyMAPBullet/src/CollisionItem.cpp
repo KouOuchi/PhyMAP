@@ -12,27 +12,36 @@ using namespace Common;
 namespace Bullet
 {
 
-CollisionItem::CollisionItem(TriSurfaceMesh* _mesh, float _mass) : 
-	mass_(_mass)
+CollisionItem::CollisionItem(TriSurfaceMesh* _mesh, float _mass) :
+  mass_(_mass)
 {
   Converter().Convert<Vector, btVector3>(_mesh->min_vec_, &min_vec_);
   Converter().Convert<Vector, btVector3>(_mesh->max_vec_, &max_vec_);
-	
+
   shape_ = createTriMesh(_mesh);
   body_state_ = new RigidBodyState(_mesh);
 }
 
 CollisionItem::~CollisionItem()
 {}
-
+int x = 0;
 void CollisionItem::initialize()
 {
   //Create the Body.
   mBody = new btRigidBody(btScalar(mass_), body_state_, shape_);
 
-  mBody->setCollisionFlags( mBody->getCollisionFlags() |
-                            btCollisionObject::CF_CHARACTER_OBJECT
-                          );
+  if (mass_ == 0)
+  {
+    mBody->setCollisionFlags(mBody->getCollisionFlags() |
+                             btCollisionObject::CF_CHARACTER_OBJECT
+                            );
+  }
+  else
+  {
+    mBody->setCollisionFlags(mBody->getCollisionFlags() |
+                             btCollisionObject::CF_CHARACTER_OBJECT
+                            );
+  }
   mBody->setActivationState(DISABLE_DEACTIVATION);
 }
 void CollisionItem::deinitialize(void)

@@ -25,7 +25,8 @@ namespace Net
 Session::Session(SolverInformationWrapper^ _info) :
   info_(_info),
   bullet_instance_(new Bullet::BulletSolverInstance(_info->solver_info_)),
-  rigid_bodies_(gcnew Dictionary<int, RigidBodyWrapper^>())
+  rigid_bodies_(gcnew Dictionary<int, RigidBodyWrapper^>()),
+  static_rigid_bodies_(gcnew Dictionary<int, RigidBodyWrapper^>())
 {
   if (info_->solver_info_->debug_)
   {
@@ -64,6 +65,7 @@ void Session::initialize(void)
   std::cout << "Session::initialize() start." << std::endl;
 
   rigid_bodies_->Clear();
+  static_rigid_bodies_->Clear();
   bullet_instance_->initialize();
 
   std::cout << "Session::initialize() end." << std::endl;
@@ -74,6 +76,7 @@ void Session::deinitialize(void)
   std::cout << "Session::deinitialize() start." << std::endl;
 
   rigid_bodies_->Clear();
+  static_rigid_bodies_->Clear();
 
   std::cout << "Session::deinitialize() end." << std::endl;
 }
