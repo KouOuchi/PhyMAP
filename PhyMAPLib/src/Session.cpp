@@ -24,7 +24,7 @@ namespace Net
 
 Session::Session(SolverInformationWrapper^ _info) :
   info_(_info),
-  bullet_instance_(new Bullet::BulletSolverInstance(info_->solver_info_)),
+  bullet_instance_(new Bullet::BulletSolverInstance(_info->solver_info_)),
   rigid_bodies_(gcnew Dictionary<int, RigidBodyWrapper^>())
 {
   if (info_->solver_info_->debug_)
@@ -55,6 +55,8 @@ Session::!Session()
   }
 
   bullet_instance_ = nullptr;
+
+  std::cout << "Session::finalizer end." << std::endl;
 }
 
 void Session::initialize(void)
@@ -113,7 +115,19 @@ void Session::update(float _time_since_last)
 
         for each(auto mesh in kv.Value->meshes_)
         {
-          if (!mesh->Transform(tran))
+          if (!mesh || !mesh->IsValid)
+          {
+            std::cout << "mesh is invalid." << std::endl;
+            continue;
+          }
+
+          if (!tran.IsValid)
+          {
+            std::cout << "transform of mesh is invalid." << std::endl;
+            continue;
+          }
+
+		  if (!mesh->Transform(tran))
           {
             std::cout << "internal transform failure." << std::endl;
           }

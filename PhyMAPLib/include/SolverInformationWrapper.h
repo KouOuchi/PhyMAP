@@ -22,7 +22,7 @@ public ref class SolverInformationWrapper
 {
 public:
   SolverInformationWrapper(bool _debug, float _time_step, double _duration,
-                           Rhino::Geometry::Vector3d _gravity);
+                           Rhino::Geometry::Vector3d^ _gravity);
   virtual ~SolverInformationWrapper(void);
   !SolverInformationWrapper(void);
 

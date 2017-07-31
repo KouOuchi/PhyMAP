@@ -4,10 +4,11 @@ using Rhino.Geometry;
 using PhyMAPComponent.Model;
 using Grasshopper.Kernel.Data;
 using System.Collections.Generic;
+using PhyMAPComponent.Properties;
 
 namespace ToolStudio
 {
-    public class RigidBodyComponent : GH_Component
+    public class PhyMAPRigidBodyComponent : GH_Component
     {
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -16,7 +17,7 @@ namespace ToolStudio
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        public RigidBodyComponent()
+        public PhyMAPRigidBodyComponent()
           : base("Rigid Body", "RigidBody",
               "",
               "PhyMAP", "Physics")
@@ -32,17 +33,19 @@ namespace ToolStudio
             // You can often supply default values when creating parameters.
             // All parameters must have the correct access type. If you want 
             // to import lists or trees of values, modify the ParamAccess flag.
+            pManager.AddBrepParameter("Brep", "BRP", "Brep List", GH_ParamAccess.list);
 
-            pManager.AddBrepParameter("Brep", "B", "Brep List", GH_ParamAccess.list);
-            pManager.AddVectorParameter("Direction", "D", "Direction Vector", GH_ParamAccess.item, Vector3d.Zero);
-            pManager.AddNumberParameter("Velocity", "V", "Verlocity", GH_ParamAccess.item, 0.0);
-            pManager.AddNumberParameter("Acceleration", "A", "Acceleration", GH_ParamAccess.item, 0.0);
+            var mec_param = new PhyMAPMechanicalPropertyParam("MechanicalProperty", "Mec", "Mechanical Prop", /*category*/"", /*sub category*/"", GH_ParamAccess.item);
+            var mec_index = pManager.AddParameter(mec_param);
+            pManager[mec_index].Optional = true;
+
+            var motion_param = new PhyMAPMotionPropertyParam("MotionProperty", "Mot", "Mechanical Prop", /*category*/"", /*sub category*/"", GH_ParamAccess.item);
+            var motion_index = pManager.AddParameter(motion_param);
+            pManager[motion_index].Optional = true;
+
             // If you want to change properties of certain parameters, 
             // you can use the pManager instance to access them by index:
             //pManager[0].Optional = true;
-            pManager[1].Optional = true;
-            pManager[2].Optional = true;
-            pManager[3].Optional = true;
         }
 
         /// <summary>
@@ -70,23 +73,18 @@ namespace ToolStudio
             // First, we need to retrieve all data from the input parameters.
             // We'll start by declaring variables and assigning them starting values.
             List<Brep> breps = new List<Brep>();
-            Vector3d direction = Vector3d.Zero;
-            double velocity = 0.0;
-            double accelalation = 0.0;
+            PhyMAPMechanicalPropertyType mec_prop = new PhyMAPMechanicalPropertyType();
+            PhyMAPMotionPropertyType motion_prop = new PhyMAPMotionPropertyType();
 
             if (!DA.GetDataList<Brep>(0, breps)) return;
-            if (!DA.GetData(1, ref direction)) return;
-            if (!DA.GetData(2, ref velocity)) return;
-            if (!DA.GetData(3, ref accelalation)) return;
+            DA.GetData<PhyMAPMechanicalPropertyType>(1,ref mec_prop);
+            DA.GetData<PhyMAPMotionPropertyType>(2,ref motion_prop);
 
             if (breps == null) return;
 
             var rigid_body = new PhyMAPRigidBodyType()
             {
                 breps_ = breps,
-                direction_ = direction,
-                velocity_ = velocity,
-                accelalation_ = accelalation
             };
             //p.AddVolatileData(new GH_Path(0), 0, rigidtype);
 
@@ -116,7 +114,7 @@ namespace ToolStudio
             {
                 // You can add image files to your project resources and access them like this:
                 //return Resources.IconForThisComponent;
-                return null;
+                return Resources.PhyMAPRigidBody;
             }
         }
 

@@ -8,7 +8,7 @@ using PhyMAPComponent.Properties;
 
 namespace ToolStudio
 {
-    public class StaticRigidBodyComponent : GH_Component
+    public class RigidBodyComponent : GH_Component
     {
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -17,8 +17,8 @@ namespace ToolStudio
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        public StaticRigidBodyComponent()
-          : base("Static Rigid Body", "StaticRigidBody",
+        public RigidBodyComponent()
+          : base("Mechanical Property", "Mechanical Prop",
               "",
               "PhyMAP", "Physics")
         {
@@ -35,9 +35,15 @@ namespace ToolStudio
             // to import lists or trees of values, modify the ParamAccess flag.
 
             pManager.AddBrepParameter("Brep", "B", "Brep List", GH_ParamAccess.list);
+            pManager.AddVectorParameter("Direction", "D", "Direction Vector", GH_ParamAccess.item, Vector3d.Zero);
+            pManager.AddNumberParameter("Velocity", "V", "Verlocity", GH_ParamAccess.item, 0.0);
+            pManager.AddNumberParameter("Acceleration", "A", "Acceleration", GH_ParamAccess.item, 0.0);
             // If you want to change properties of certain parameters, 
             // you can use the pManager instance to access them by index:
-            pManager[0].Optional = true;
+            //pManager[0].Optional = true;
+            pManager[1].Optional = true;
+            pManager[2].Optional = true;
+            pManager[3].Optional = true;
         }
 
         /// <summary>
@@ -51,7 +57,7 @@ namespace ToolStudio
             // Sometimes you want to hide a specific parameter from the Rhino preview.
             // You can use the HideParameter() method as a quick way:
             //pManager.HideParameter(0);
-            PhyMAPStaticRigidBodyParam p = new PhyMAPStaticRigidBodyParam("Static RigidBydy", "SR", "Static Rigid Body", /*category*/"", /*sub category*/"", GH_ParamAccess.item);
+            PhyMAPRigidBodyParam p = new PhyMAPRigidBodyParam("RigidBydy", "RB", "Rigid Body", /*category*/"", /*sub category*/"", GH_ParamAccess.item);
             pManager.AddParameter(p);
         }
 
@@ -65,19 +71,25 @@ namespace ToolStudio
             // First, we need to retrieve all data from the input parameters.
             // We'll start by declaring variables and assigning them starting values.
             List<Brep> breps = new List<Brep>();
+            Vector3d direction = Vector3d.Zero;
+            double velocity = 0.0;
+            double accelalation = 0.0;
 
             if (!DA.GetDataList<Brep>(0, breps)) return;
+            if (!DA.GetData(1, ref direction)) return;
+            if (!DA.GetData(2, ref velocity)) return;
+            if (!DA.GetData(3, ref accelalation)) return;
 
             if (breps == null) return;
 
-            var static_rigid_body = new PhyMAPStaticRigidBodyType()
+            var rigid_body = new PhyMAPRigidBodyType()
             {
                 breps_ = breps,
             };
             //p.AddVolatileData(new GH_Path(0), 0, rigidtype);
 
             // Finally assign the spiral to the output parameter.
-            DA.SetData(0, static_rigid_body);
+            DA.SetData(0, rigid_body);
         }
 
 
@@ -102,7 +114,7 @@ namespace ToolStudio
             {
                 // You can add image files to your project resources and access them like this:
                 //return Resources.IconForThisComponent;
-                return Resources.PhyMAPStaticRigidBody;
+                return Resources.PhyMAPMechanicalProperty;
             }
         }
 
@@ -113,7 +125,7 @@ namespace ToolStudio
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("C50554B7-0C40-429D-A6DB-5157E7AFF9D0"); }
+            get { return new Guid("D7999F21-7FC8-4C0B-9830-33622A4B8592"); }
         }
     }
 }

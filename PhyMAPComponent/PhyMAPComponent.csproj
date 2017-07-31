@@ -92,8 +92,14 @@
     <Compile Include="Logic\RigidBodyBuilder.cs" />
     <Compile Include="Logic\ShapeBuilder.cs" />
     <Compile Include="Logic\StaticRigidBodyBuilder.cs" />
+    <Compile Include="Model\PhyMAPMotionPropertyParam.cs" />
+    <Compile Include="Model\PhyMAPMotionPropertyType.cs" />
+    <Compile Include="Model\PhyMAPMechanicalPropertyType.cs" />
+    <Compile Include="Model\PhyMAPMechanicalPropertyParam.cs" />
     <Compile Include="Model\PhyMAPStaticRigidBodyParam.cs" />
     <Compile Include="Model\PhyMAPStaticRigidBodyType.cs" />
+    <Compile Include="PhyMAPMotionPropertyComponent.cs" />
+    <Compile Include="PhyMAPMechanicalPropertyComponent.cs" />
     <Compile Include="PhyMAPStaticRigidBodyComponent.cs" />
     <Compile Include="PhyMAPWorldComponent.cs" />
     <Compile Include="PhyMAPComponentInfo.cs" />
@@ -102,9 +108,27 @@
     <Compile Include="Model\PhyMAPRigidBodyType.cs" />
     <Compile Include="PhyMAPRigidBodyComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="old\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\PhyMAPMechanicalProperty.png" />
+    <Content Include="Resources\PhyMAPMotionProperty.png" />
+    <Content Include="Resources\PhyMAPRigidBody.png" />
+    <Content Include="Resources\PhyMAPStaticRigidBody.png" />
+    <Content Include="Resources\PhyMAPWorld.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

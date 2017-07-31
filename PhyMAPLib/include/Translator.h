@@ -32,6 +32,13 @@ ref struct Translator
   }
 
   template <>
+  void netToNative<Rhino::Geometry::Vector3d, Vector>(
+    Rhino::Geometry::Vector3d^ _source, Vector* _target)
+  {
+    _target->assign(Vector(_source->X, _source->Y, _source->Z));
+  }
+
+  template <>
   void netToNative<Rhino::Geometry::Point3f, Vector>(
     Rhino::Geometry::Point3f^ _source, Vector* _target)
   {
@@ -89,7 +96,7 @@ ref struct Translator
     List<Rhino::Geometry::Mesh^>^ _source, TriSurfaceMesh* _target)
   {
     int vertex_offset = 0;
-	Rhino::Geometry::BoundingBox box = Rhino::Geometry::BoundingBox::Empty;
+    Rhino::Geometry::BoundingBox box = Rhino::Geometry::BoundingBox::Empty;
 
     for (int m = 0; m < _source->Count; m++)
     {
@@ -129,7 +136,7 @@ ref struct Translator
       }
 
       vertex_offset += mesh->Vertices->Count;
-	  box.Union(mesh->GetBoundingBox(true));
+      box.Union(mesh->GetBoundingBox(true));
     }
 
     // copy bounding box
@@ -138,7 +145,8 @@ ref struct Translator
   }
 
   template <>
-  void nativeToNet<Transform, Rhino::Geometry::Transform>(const Transform& _source,
+  void nativeToNet<Transform, Rhino::Geometry::Transform>(const Transform&
+      _source,
       Rhino::Geometry::Transform^ _target)
   {
     *_target = Rhino::Geometry::Transform::Identity;

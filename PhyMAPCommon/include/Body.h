@@ -30,13 +30,13 @@ public:
   {
 
   }
-  virtual void getTransform(Transform* _movement)
+  virtual void getTransform(Transform* _transform)
   {
-    _movement->assign(transform_);
+    _transform->assign(transform_);
   }
-  virtual void setTransform(const Transform& _movement)
+  virtual void setTransform(const Transform& _transform)
   {
-    transform_.assign(_movement);
+    transform_.assign(_transform);
   }
   virtual void setTransform(Vector& _position, Quaternion& _orientation)
   {

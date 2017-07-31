@@ -11,7 +11,7 @@ namespace Net
 {
 
 SolverInformationWrapper::SolverInformationWrapper(bool _debug,
-    float _time_step, double _duration, Rhino::Geometry::Vector3d _gravity)
+    float _time_step, double _duration, Rhino::Geometry::Vector3d^ _gravity)
   : solver_info_(new SolverInformation())
 {
   solver_info_->debug_ = _debug;
@@ -19,7 +19,7 @@ SolverInformationWrapper::SolverInformationWrapper(bool _debug,
   solver_info_->duration_ = _duration;
 
   Translator().netToNative<Rhino::Geometry::Vector3d, Vector>
-  (_gravity, &solver_info_->gravity_);
+  (_gravity, &(solver_info_->gravity_));
 }
 
 SolverInformationWrapper::~SolverInformationWrapper()

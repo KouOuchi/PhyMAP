@@ -10,6 +10,7 @@ using RhinoToOgre;
 using PhyMAP.Net;
 using System.Collections;
 using PhyMAPComponent.Logic;
+using PhyMAPComponent.Properties;
 
 namespace PhyMAPComponent
 {
@@ -103,11 +104,11 @@ namespace PhyMAPComponent
             if (!DA.GetData(4, ref simulation_duration)) return;
             if (!DA.GetData(5, ref gravity)) return;
             if (!DA.GetDataList<PhyMAPRigidBodyType>(6, shape_builder.Rigid_bodies)) return;
-            if (!DA.GetDataList<PhyMAPStaticRigidBodyType>(7, shape_builder.Static_rigid_bodies)) return;
+            DA.GetDataList<PhyMAPStaticRigidBodyType>(7, shape_builder.Static_rigid_bodies);
 
-            if (!run || shape_builder.IsRunnable())
+            if (!run)
             {
-                RhinoLogger.Debug("not run. or no Rigid Body.");
+                RhinoLogger.Warn("not run. or no Rigid Body.");
                 DA.SetDataList(0, new List<Mesh>());
                 DA.SetData(1, 1.0);
             }
@@ -132,7 +133,7 @@ namespace PhyMAPComponent
             {
                 // You can add image files to your project resources and access them like this:
                 //return Resources.IconForThisComponent;
-                return null;
+                return Resources.PhyMAPWorld;
             }
         }
 
@@ -173,10 +174,12 @@ namespace PhyMAPComponent
         }
         protected override void AfterSolveInstance()
         {
-            if (session != null )
+            if (run)
             {
                 try
                 {
+                    if (!CheckAfterSolveInstanceCondition()) return;
+
                     DateTime base_time = DateTime.Now;
                     TimeSpan time_span;
                     double total_duration = 0;
@@ -198,7 +201,7 @@ namespace PhyMAPComponent
                 }
                 catch(Exception e)
                 {
-                    RhinoLogger.Error(e.Message);
+                    RhinoLogger.Fatal(e.Message);
                 }
                 finally
                 {
@@ -208,6 +211,23 @@ namespace PhyMAPComponent
             }
 
             base.AfterSolveInstance();
+        }
+
+        private bool CheckAfterSolveInstanceCondition()
+        {
+            if (session == null)
+            {
+                RhinoLogger.Fatal("no session.");
+                return false;
+            }
+
+            if (!shape_builder.IsRunnable())
+            {
+                RhinoLogger.Warn("no shape.");
+                return false;
+            }
+
+            return true;
         }
 
         private void AddShape()
@@ -238,7 +258,7 @@ namespace PhyMAPComponent
 
         private void InitializeSession()
         {
-            RhinoLogger.Debug("start session initialize.");
+            RhinoLogger.Info("start session initialize.");
             session.initialize();
         }
 
