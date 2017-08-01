@@ -55,8 +55,8 @@ namespace PhyMAPComponent.Logic
         internal void AddShape(Session session)
         {
             body_index = 0;
-            new RigidBodyBuilder().AddRigidBody(ref body_index, session, rigid_bodies);
-            new StaticRigidBodyBuilder().AddStaticRigidBody(ref body_index, session, static_rigid_bodies);
+            new TransferRigidBody().AddRigidBody(ref body_index, session, rigid_bodies);
+            new TransferStaticRigidBody().AddStaticRigidBody(ref body_index, session, static_rigid_bodies);
         }
     }
 }

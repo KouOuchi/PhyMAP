@@ -63,9 +63,9 @@ void BulletSolverInstance::deinitialize(void)
   for (std::map<RigidBody*, CollisionItem*>::iterator it = items_.begin();
        it != items_.end(); ++it)
   {
-    if (it->second->mBody)
+    if (it->second->body_)
     {
-      phyWorld->removeRigidBody(it->second->mBody);
+      phyWorld->removeRigidBody(it->second->body_);
     }
     it->second->deinitialize();
 
@@ -95,11 +95,14 @@ void BulletSolverInstance::addRigidBody(RigidBody* _rigid_body)
   }
 
   TriSurfaceMesh* tri_mesh = static_cast<TriSurfaceMesh*>(mesh);
-  CollisionItem* item = new CollisionItem(tri_mesh, 1);
+  CollisionItem* item = new CollisionItem(
+    tri_mesh,
+    _rigid_body->mechanical_property_,
+    _rigid_body->motion_property_);
 
   // init
   item->initialize();
-  phyWorld->addRigidBody(item->mBody);
+  phyWorld->addRigidBody(item->body_);
 
   items_.insert(std::pair<RigidBody*, CollisionItem*>(_rigid_body, item));
 }
@@ -113,11 +116,14 @@ void BulletSolverInstance::addStaticRigidBody(RigidBody* _rigid_body)
   }
 
   TriSurfaceMesh* tri_mesh = static_cast<TriSurfaceMesh*>(mesh);
-  CollisionItem* item = new CollisionItem(tri_mesh, 0);
+  CollisionItem* item = new CollisionItem(
+    tri_mesh,
+    _rigid_body->mechanical_property_,
+    _rigid_body->motion_property_);
 
   // init
   item->initialize();
-  phyWorld->addRigidBody(item->mBody);
+  phyWorld->addRigidBody(item->body_);
 
   items_.insert(std::pair<RigidBody*, CollisionItem*>(_rigid_body, item));
 }

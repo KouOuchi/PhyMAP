@@ -180,26 +180,14 @@ ref struct Translator
         throw std::runtime_error("getting orientation failure.");
       }
 
-      /*
-      	  for (const int row : { 0, 1, 2 })
-      	  {
-      		for (const int col : { 0, 1, 2, 3})
-      		{
-      		  (*_target)[row, col] = rot_trans[row, col];
-      		}
-      	  }
-      	  (*_target)[3, 0] = _source.position_.v_[0];
-      	  (*_target)[3, 1] = _source.position_.v_[1];
-      	  (*_target)[3, 2] = _source.position_.v_[2];
-      	  (*_target)[3, 3] = 1.0;
-      */
-      *_target *= Rhino::Geometry::Transform::Rotation(angle, axis, Rhino::Geometry::Point3f::Origin);
+      *_target *= Rhino::Geometry::Transform::Rotation(angle, axis,
+                  Rhino::Geometry::Point3f::Origin);
     }
 
-	*_target *= Rhino::Geometry::Transform::Translation(
-		_source.position_.v_[0],
-		_source.position_.v_[1],
-		_source.position_.v_[2]);
+    *_target *= Rhino::Geometry::Transform::Translation(
+                  _source.position_.v_[0],
+                  _source.position_.v_[1],
+                  _source.position_.v_[2]);
   }
 
   template <>

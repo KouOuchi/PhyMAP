@@ -1,5 +1,8 @@
 #pragma once
 
+#include "MechanicalProperty.h"
+#include "MotionProperty.h"
+
 class btRigidBody;
 class btCollisionShape;
 class btVector3;
@@ -24,13 +27,14 @@ class RigidBodyState;
 class CollisionItem
 {
 public:
-  CollisionItem(TriSurfaceMesh* _mesh, float _mass);
+  CollisionItem(TriSurfaceMesh* _mesh,
+                const MechanicalProperty& _mechanical_property,
+                const MotionProperty& _motion_property);
   virtual ~CollisionItem();
 
-  btRigidBody* mBody;
+  btRigidBody* body_;
   btCollisionShape* shape_;
   RigidBodyState* body_state_;
-//  TriSurfaceMesh* mesh_;
 
   btVector3 min_vec_;
   btVector3 max_vec_;
@@ -41,8 +45,9 @@ public:
   void getTrasnform(Vector* _position, Quaternion* _orientation);
 protected:
   btBvhTriangleMeshShape* CollisionItem::createTriMesh(TriSurfaceMesh* _mesh);
-//  int mesh_id_;
-  float mass_;
+
+  MechanicalProperty mechanical_property_;
+  MotionProperty motion_property_;
 };
 
 }//namespace Common

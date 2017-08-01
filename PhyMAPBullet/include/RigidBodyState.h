@@ -17,11 +17,6 @@ using namespace Common;
 namespace Bullet
 {
 
-
-//A MotionState is Bullet's way of informing you about updates to an object.
-//Pass this MotionState to a btRigidBody to have your SceneNode updated automaticaly.
-
-///RigidBody state to comunicate back the physics movements to the graphics
 class RigidBodyState : public btMotionState
 {
 protected:

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "MechanicalPropertyWrapper.h"
+#include "MotionPropertyWrapper.h"
+
 namespace PhyMAP
 {
 namespace Common
@@ -23,7 +26,8 @@ public:
   !RigidBodyWrapper(void);
 
   bool setMeshes(List<Rhino::Geometry::Mesh^>^ _meshes);
-  //bool setTransform(Rhino::Geometry::Transform^ _transform);
+  bool setMechanicalProperty(MechanicalPropertyWrapper^ _mechanical_property);
+  bool setMotionProperty(MotionPropertyWrapper^ _motion_property);
 
   List<Rhino::Geometry::Mesh^>^ meshes_;
 

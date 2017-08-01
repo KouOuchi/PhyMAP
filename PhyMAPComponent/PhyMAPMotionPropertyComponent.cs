@@ -72,7 +72,6 @@ namespace ToolStudio
 
             var motion_prop = new PhyMAPMotionPropertyType()
             {
-                start_transform_ = start_trans,
                 local_inertia_ = local_inertia
             };
             //p.AddVolatileData(new GH_Path(0), 0, rigidtype);

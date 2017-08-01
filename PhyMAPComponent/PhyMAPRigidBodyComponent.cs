@@ -85,6 +85,8 @@ namespace ToolStudio
             var rigid_body = new PhyMAPRigidBodyType()
             {
                 breps_ = breps,
+                mechanical_property_ = mec_prop,
+                motion_property_ = motion_prop,
             };
             //p.AddVolatileData(new GH_Path(0), 0, rigidtype);
 

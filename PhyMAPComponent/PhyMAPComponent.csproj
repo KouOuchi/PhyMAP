@@ -89,9 +89,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Logic\RigidBodyBuilder.cs" />
+    <Compile Include="Logic\AbstractTransfer.cs" />
+    <Compile Include="Logic\TransferMechanicalProperty.cs" />
+    <Compile Include="Logic\TransferMotionProperty.cs" />
+    <Compile Include="Logic\TransferRigidBody.cs" />
     <Compile Include="Logic\ShapeBuilder.cs" />
-    <Compile Include="Logic\StaticRigidBodyBuilder.cs" />
+    <Compile Include="Logic\TransferStaticRigidBody.cs" />
     <Compile Include="Model\PhyMAPMotionPropertyParam.cs" />
     <Compile Include="Model\PhyMAPMotionPropertyType.cs" />
     <Compile Include="Model\PhyMAPMechanicalPropertyType.cs" />

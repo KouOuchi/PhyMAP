@@ -9,9 +9,10 @@ namespace PhyMAPComponent.Model
     public class PhyMAPRigidBodyType : IGH_Goo
     {
         public List<Brep> breps_ = new List<Brep>();
-        public Vector3d direction_ = Vector3d.Zero;
-        public double velocity_ = 0.0;
-        public double accelalation_ = 0.0;
+        public PhyMAPMotionPropertyType motion_property_ = 
+            new PhyMAPMotionPropertyType();
+        public PhyMAPMechanicalPropertyType mechanical_property_ = 
+            new PhyMAPMechanicalPropertyType();
 
         public bool IsValid
         {
@@ -61,9 +62,8 @@ namespace PhyMAPComponent.Model
         {
             var goo = new PhyMAPRigidBodyType()
             {
-                direction_ = new Vector3d(this.direction_),
-                velocity_ = this.velocity_,
-                accelalation_ = this.accelalation_
+                motion_property_ = (PhyMAPMotionPropertyType)this.motion_property_.Duplicate(),
+                mechanical_property_ = (PhyMAPMechanicalPropertyType)this.mechanical_property_.Duplicate()
             };
 
             this.breps_.ForEach(p => goo.breps_.Add(p.DuplicateBrep()));

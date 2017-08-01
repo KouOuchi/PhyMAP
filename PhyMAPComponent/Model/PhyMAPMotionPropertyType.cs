@@ -8,7 +8,7 @@ namespace PhyMAPComponent.Model
 {
     public class PhyMAPMotionPropertyType : IGH_Goo
     {
-        public Transform start_transform_ = Transform.Identity;
+//        public Transform start_transform_ = Transform.Identity;
         public Vector3d local_inertia_ = Vector3d.Zero;
 
         public bool IsValid
@@ -59,7 +59,7 @@ namespace PhyMAPComponent.Model
         {
             var goo = new PhyMAPMotionPropertyType()
             {
-                start_transform_ = this.start_transform_,
+//                start_transform_ = this.start_transform_,
                 local_inertia_ = new Vector3d(this.local_inertia_)
             };
 

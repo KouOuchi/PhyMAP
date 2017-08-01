@@ -4,6 +4,8 @@
 
 #include "Mesh.h"
 #include "Transform.h"
+#include "MechanicalProperty.h"
+#include "MotionProperty.h"
 
 namespace PhyMAP
 {
@@ -50,10 +52,12 @@ public:
     _orientation->assign(transform_.orientation_);
   }
 
+  MechanicalProperty mechanical_property_;
+  MotionProperty motion_property_;
+
 protected:
   Mesh* mesh_;
   Transform transform_;
-
 };
 
 }//namespace Common

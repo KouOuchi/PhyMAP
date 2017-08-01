@@ -12,8 +12,13 @@ using namespace Common;
 namespace Bullet
 {
 
-CollisionItem::CollisionItem(TriSurfaceMesh* _mesh, float _mass) :
-  mass_(_mass)
+CollisionItem::CollisionItem(
+  TriSurfaceMesh* _mesh,
+  const MechanicalProperty& _mechanical_property,
+  const MotionProperty& _motion_property)
+  : body_state_(nullptr), shape_(nullptr), body_(nullptr),
+    mechanical_property_(_mechanical_property),
+    motion_property_(_motion_property)
 {
   Converter().Convert<Vector, btVector3>(_mesh->min_vec_, &min_vec_);
   Converter().Convert<Vector, btVector3>(_mesh->max_vec_, &max_vec_);
@@ -24,33 +29,36 @@ CollisionItem::CollisionItem(TriSurfaceMesh* _mesh, float _mass) :
 
 CollisionItem::~CollisionItem()
 {}
-int x = 0;
+
 void CollisionItem::initialize()
 {
-  //Create the Body.
-  mBody = new btRigidBody(btScalar(mass_), body_state_, shape_);
+  btVector3 inertia;
+  Converter().Convert<Vector, btVector3>
+  (motion_property_.local_inertia_, &inertia);
 
-  if (mass_ == 0)
-  {
-    mBody->setCollisionFlags(mBody->getCollisionFlags() |
-                             btCollisionObject::CF_CHARACTER_OBJECT
-                            );
-  }
-  else
-  {
-    mBody->setCollisionFlags(mBody->getCollisionFlags() |
-                             btCollisionObject::CF_CHARACTER_OBJECT
-                            );
-  }
-  mBody->setActivationState(DISABLE_DEACTIVATION);
+  //Create the Body.
+  btRigidBody::btRigidBodyConstructionInfo
+  binfo(btScalar(mechanical_property_.mass_),
+        body_state_,
+        shape_,
+        inertia
+       );
+
+  body_ = new btRigidBody(binfo);
+
+  body_->setCollisionFlags(body_->getCollisionFlags() |
+                           btCollisionObject::CF_CHARACTER_OBJECT
+                          );
+
+  body_->setActivationState(DISABLE_DEACTIVATION);
 }
 void CollisionItem::deinitialize(void)
 {
-  if (mBody)
+  if (body_)
   {
-    mBody->getMotionState();
-    delete mBody;
-    mBody = nullptr;
+    body_->getMotionState();
+    delete body_;
+    body_ = nullptr;
   }
   if (shape_)
   {
@@ -61,10 +69,10 @@ void CollisionItem::deinitialize(void)
 
 void CollisionItem::update()
 {
-  if (mBody)
+  if (body_)
   {
     btVector3 minVec, maxVec;
-    mBody->getAabb(minVec, maxVec);
+    body_->getAabb(minVec, maxVec);
 
     if (minVec != min_vec_ || maxVec != max_vec_)
     {
@@ -86,7 +94,7 @@ void CollisionItem::getTrasnform(Vector* _position,
                                  Quaternion* _orientation)
 {
   const auto trans =
-    mBody->getWorldTransform();
+    body_->getWorldTransform();
 
   Converter cv;
   cv.Convert<btVector3, Vector>(trans.getOrigin(), _position);
