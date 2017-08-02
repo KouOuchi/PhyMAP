@@ -29,7 +29,7 @@ namespace PhyMAPComponent.Logic
                 {
                     continue;
                 }
-                if(!SetMechanicalProperty(rigidw, rigid_bodies[i].mechanical_property_))
+                if (!SetMechanicalProperty(rigidw, rigid_bodies[i].mechanical_property_))
                 {
                     continue;
                 }
@@ -40,5 +40,9 @@ namespace PhyMAPComponent.Logic
             body_index += rigid_bodies.Count;
         }
 
+        protected override void AddRigidBody(int i, RigidBodyWrapper w, Session session)
+        {
+            base.AddRigidBody(i, w, session);
+        }
     }
 }

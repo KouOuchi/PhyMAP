@@ -30,5 +30,13 @@ namespace PhyMAPComponent.Logic
             
             body_index += static_rigid_bodies.Count;
         }
+        protected override void AddRigidBody(int i, RigidBodyWrapper w, Session session)
+        {
+            if (session.addStaticRigidBody(i, w))
+            {
+                RhinoLogger.ErrorFormat("Brep {0} : addRigidBody() failure.", i);
+            }
+        }
+
     }
 }

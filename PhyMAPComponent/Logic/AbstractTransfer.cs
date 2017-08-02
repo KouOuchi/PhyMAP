@@ -43,9 +43,9 @@ namespace PhyMAPComponent.Logic
             return true;
         }
 
-        protected void AddRigidBody(int i, RigidBodyWrapper w, Session session)
+        protected virtual void AddRigidBody(int i, RigidBodyWrapper w, Session session)
         {
-            if(session.addRigidBody(i, w))
+            if (session.addRigidBody(i, w))
             {
                 RhinoLogger.ErrorFormat("Brep {0} : addRigidBody() failure.", i);
             }

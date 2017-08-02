@@ -85,7 +85,6 @@ void CollisionItem::update()
       //        std::cout << "Max :" << maxVec.getX() << " " << maxVec.getY() << " " <<
       //                  maxVec.getZ() <<
       //                  std::endl;
-
     }
   }
 }
