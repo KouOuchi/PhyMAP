@@ -41,7 +41,7 @@ public:
   BULLET_API virtual void update(float timeSinceLast);
 
   BULLET_API virtual void addRigidBody(RigidBody* _rigid_body);
-  BULLET_API virtual void addStaticRigidBody(RigidBody* _rigid_body);
+  //BULLET_API virtual void addStaticRigidBody(RigidBody* _rigid_body);
 
   BULLET_API virtual void getRigidBodyTransform(int _mesh_id, Vector* _position, Quaternion* _orientation);
 

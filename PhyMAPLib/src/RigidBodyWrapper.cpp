@@ -16,6 +16,11 @@ RigidBodyWrapper::RigidBodyWrapper()
 {
 }
 
+RigidBodyWrapper::RigidBodyWrapper(RigidBody* _rigid_body)
+  : rigid_body_(_rigid_body), meshes_(nullptr)
+{
+}
+
 RigidBodyWrapper::~RigidBodyWrapper()
 {
   this->!RigidBodyWrapper();
@@ -59,6 +64,21 @@ bool RigidBodyWrapper::setMotionProperty(MotionPropertyWrapper^
   rigid_body_->motion_property_.assign(
     *(_motion_property->motion_property_));
   return true;
+}
+
+StaticRigidBodyWrapper::StaticRigidBodyWrapper()
+  : RigidBodyWrapper(new StaticRigidBody())
+{
+}
+
+StaticRigidBodyWrapper::~StaticRigidBodyWrapper()
+{
+  this->!StaticRigidBodyWrapper();
+}
+
+StaticRigidBodyWrapper::!StaticRigidBodyWrapper()
+{
+
 }
 
 }//namespace Net

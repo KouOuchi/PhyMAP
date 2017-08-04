@@ -1,4 +1,5 @@
 #include "BulletSolverInstance.h"
+
 #include <Mesh.h>
 #include <TriSurfaceMesh.h>
 #include "CollisionItem.h"
@@ -65,7 +66,7 @@ void BulletSolverInstance::deinitialize(void)
   {
     if (it->second->body_)
     {
-      phyWorld->removeRigidBody(it->second->body_);
+      phyWorld->removeCollisionObject(it->second->body_);
     }
     it->second->deinitialize();
 
@@ -95,38 +96,38 @@ void BulletSolverInstance::addRigidBody(RigidBody* _rigid_body)
   }
 
   TriSurfaceMesh* tri_mesh = static_cast<TriSurfaceMesh*>(mesh);
-  CollisionItem* item = new CollisionItem(
-    tri_mesh,
-    _rigid_body->mechanical_property_,
-    _rigid_body->motion_property_);
+
+  std::cout << typeid(*_rigid_body).name() <<
+            ": add to bullet DynamicsWorld" << std::endl;
+
+  CollisionItem* item = new CollisionItem(tri_mesh);
 
   // init
-  item->initialize();
-  phyWorld->addRigidBody(item->body_);
+  item->initialize(_rigid_body, phyWorld);
 
   items_.insert(std::pair<RigidBody*, CollisionItem*>(_rigid_body, item));
 }
 
-void BulletSolverInstance::addStaticRigidBody(RigidBody* _rigid_body)
-{
-  auto mesh = _rigid_body->getMesh();
-  if (mesh == nullptr)
-  {
-    throw std::runtime_error(std::string("arg mesh is null."));
-  }
-
-  TriSurfaceMesh* tri_mesh = static_cast<TriSurfaceMesh*>(mesh);
-  CollisionItem* item = new CollisionItem(
-    tri_mesh,
-    _rigid_body->mechanical_property_,
-    _rigid_body->motion_property_);
-
-  // init
-  item->initialize();
-  phyWorld->addRigidBody(item->body_);
-
-  items_.insert(std::pair<RigidBody*, CollisionItem*>(_rigid_body, item));
-}
+//void BulletSolverInstance::addStaticRigidBody(RigidBody* _rigid_body)
+//{
+//  auto mesh = _rigid_body->getMesh();
+//  if (mesh == nullptr)
+//  {
+//    throw std::runtime_error(std::string("arg mesh is null."));
+//  }
+//
+//  TriSurfaceMesh* tri_mesh = static_cast<TriSurfaceMesh*>(mesh);
+//  CollisionItem* item = new CollisionItem(
+//    tri_mesh,
+//    _rigid_body->mechanical_property_,
+//    _rigid_body->motion_property_);
+//
+//  // init
+//  item->initialize();
+//  phyWorld->addRigidBody(item->body_);
+//
+//  items_.insert(std::pair<RigidBody*, CollisionItem*>(_rigid_body, item));
+//}
 
 void BulletSolverInstance::getRigidBodyTransform(int _mesh_id,
     Vector* _position, Quaternion* _orientation)

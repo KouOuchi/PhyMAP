@@ -12,7 +12,7 @@ namespace PhyMAPComponent.Logic
         {
             for (int i = 0; i < static_rigid_bodies.Count; i++)
             {
-                RigidBodyWrapper rigidw = new RigidBodyWrapper();
+                StaticRigidBodyWrapper rigidw = new StaticRigidBodyWrapper();
 
                 List<Mesh> meshes = CreateMesh(static_rigid_bodies[i].breps_);
 
@@ -32,11 +32,10 @@ namespace PhyMAPComponent.Logic
         }
         protected override void AddRigidBody(int i, RigidBodyWrapper w, Session session)
         {
-            if (session.addStaticRigidBody(i, w))
+            if (session.addRigidBody(i, w))
             {
                 RhinoLogger.ErrorFormat("Brep {0} : addRigidBody() failure.", i);
             }
         }
-
     }
 }

@@ -1,9 +1,6 @@
 #include "CollisionItem.h"
 
-#include "Converter.h"
 #include <TriSurfaceMesh.h>
-#include "RigidBodyState.h"
-#include <btBulletDynamicsCommon.h>
 
 namespace PhyMAP
 {
@@ -13,12 +10,12 @@ namespace Bullet
 {
 
 CollisionItem::CollisionItem(
-  TriSurfaceMesh* _mesh,
+  TriSurfaceMesh* _mesh/*,
   const MechanicalProperty& _mechanical_property,
-  const MotionProperty& _motion_property)
-  : body_state_(nullptr), shape_(nullptr), body_(nullptr),
+  const MotionProperty& _motion_property*/)
+  : body_state_(nullptr), shape_(nullptr), body_(nullptr)/*,
     mechanical_property_(_mechanical_property),
-    motion_property_(_motion_property)
+    motion_property_(_motion_property)*/
 {
   Converter().Convert<Vector, btVector3>(_mesh->min_vec_, &min_vec_);
   Converter().Convert<Vector, btVector3>(_mesh->max_vec_, &max_vec_);
@@ -30,33 +27,10 @@ CollisionItem::CollisionItem(
 CollisionItem::~CollisionItem()
 {}
 
-void CollisionItem::initialize()
-{
-  btVector3 inertia;
-  Converter().Convert<Vector, btVector3>
-  (motion_property_.local_inertia_, &inertia);
-
-  //Create the Body.
-  btRigidBody::btRigidBodyConstructionInfo
-  binfo(btScalar(mechanical_property_.mass_),
-        body_state_,
-        shape_,
-        inertia
-       );
-
-  body_ = new btRigidBody(binfo);
-
-  body_->setCollisionFlags(body_->getCollisionFlags() |
-                           btCollisionObject::CF_CHARACTER_OBJECT
-                          );
-
-  body_->setActivationState(DISABLE_DEACTIVATION);
-}
 void CollisionItem::deinitialize(void)
 {
   if (body_)
   {
-    body_->getMotionState();
     delete body_;
     body_ = nullptr;
   }
@@ -71,20 +45,24 @@ void CollisionItem::update()
 {
   if (body_)
   {
-    btVector3 minVec, maxVec;
-    body_->getAabb(minVec, maxVec);
-
-    if (minVec != min_vec_ || maxVec != max_vec_)
+    btRigidBody* rigid_body = static_cast<btRigidBody*>(body_);
+    if (rigid_body)
     {
-      min_vec_.setValue(minVec.getX(), minVec.getY(), minVec.getZ());
-      max_vec_.setValue(maxVec.getX(), maxVec.getY(), maxVec.getZ());
+      btVector3 minVec, maxVec;
+      rigid_body->getAabb(minVec, maxVec);
 
-      //        std::cout << "(bt Target) Min :" << minVec.getX() << " " << minVec.getY() << " "
-      //                  <<
-      //                  minVec.getZ();
-      //        std::cout << "Max :" << maxVec.getX() << " " << maxVec.getY() << " " <<
-      //                  maxVec.getZ() <<
-      //                  std::endl;
+      if (minVec != min_vec_ || maxVec != max_vec_)
+      {
+        min_vec_.setValue(minVec.getX(), minVec.getY(), minVec.getZ());
+        max_vec_.setValue(maxVec.getX(), maxVec.getY(), maxVec.getZ());
+
+        //        std::cout << "(bt Target) Min :" << minVec.getX() << " " << minVec.getY() << " "
+        //                  <<
+        //                  minVec.getZ();
+        //        std::cout << "Max :" << maxVec.getX() << " " << maxVec.getY() << " " <<
+        //                  maxVec.getZ() <<
+        //                  std::endl;
+      }
     }
   }
 }
@@ -124,7 +102,6 @@ btBvhTriangleMeshShape* CollisionItem::createTriMesh(TriSurfaceMesh* _mesh)
 
   return shape;
 }
-
 
 }//namespace Bullet
 }//namespace PhyMAP

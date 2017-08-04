@@ -22,6 +22,7 @@ public ref class RigidBodyWrapper
 {
 public:
   RigidBodyWrapper(void);
+  RigidBodyWrapper(RigidBody* _rigid_body);
   virtual ~RigidBodyWrapper(void);
   !RigidBodyWrapper(void);
 
@@ -36,5 +37,12 @@ internal:
   RigidBody* rigid_body_;
 };
 
+public ref class StaticRigidBodyWrapper : RigidBodyWrapper
+{
+public:
+  StaticRigidBodyWrapper(void);
+  virtual ~StaticRigidBodyWrapper(void);
+  !StaticRigidBodyWrapper(void);
+};
 }//namespace Net
 }//namespace PhyMAP

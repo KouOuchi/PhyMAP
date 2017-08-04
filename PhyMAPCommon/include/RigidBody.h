@@ -16,5 +16,13 @@ public:
 
 };
 
+class StaticRigidBody : public Body
+{
+public:
+  StaticRigidBody(void) : Body(new TriSurfaceMesh()) {}
+  virtual ~StaticRigidBody(void) {}
+
+};
+
 }//namespace Common
 }//namespace PhyMAP

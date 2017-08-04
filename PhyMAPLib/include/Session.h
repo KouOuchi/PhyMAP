@@ -15,8 +15,6 @@ namespace Net
 using namespace System;
 using namespace System::Collections::Generic;
 
-
-
 public ref class Session 
 {
 public:
@@ -28,7 +26,7 @@ public:
   void deinitialize(void);
 
   bool addRigidBody(int i, RigidBodyWrapper^ _rigid_body);
-  bool addStaticRigidBody(int i, RigidBodyWrapper^ _staic_rigid_body);
+//  bool addStaticRigidBody(int i, RigidBodyWrapper^ _staic_rigid_body);
 
   //Rhino::Geometry::Transform getRigidBodyTransform(int i);
   Dictionary<int, RigidBodyWrapper^>^ getRigidBodies() { return rigid_bodies_; };
@@ -39,7 +37,7 @@ private:
   Bullet::BulletSolverInstance* bullet_instance_;
 
   Dictionary<int, RigidBodyWrapper^>^ rigid_bodies_;
-  Dictionary<int, RigidBodyWrapper^>^ static_rigid_bodies_;
+//  Dictionary<int, RigidBodyWrapper^>^ static_rigid_bodies_;
 
   SolverInformationWrapper^ info_;
 };

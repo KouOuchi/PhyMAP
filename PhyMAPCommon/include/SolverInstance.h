@@ -26,7 +26,7 @@ public:
   virtual void deinitialize(void) = 0;
 
   virtual void addRigidBody(RigidBody* _rigid_body) {}
-  virtual void addStaticRigidBody(RigidBody* _rigid_body) {}
+//  virtual void addStaticRigidBody(RigidBody* _rigid_body) {}
 
   virtual void update(float timeSinceLast) {}
   virtual void getRigidBodyTransform(int _mesh_id, const Vector* _translation,

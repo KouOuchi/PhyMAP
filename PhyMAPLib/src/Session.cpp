@@ -25,8 +25,8 @@ namespace Net
 Session::Session(SolverInformationWrapper^ _info) :
   info_(_info),
   bullet_instance_(new Bullet::BulletSolverInstance(_info->solver_info_)),
-  rigid_bodies_(gcnew Dictionary<int, RigidBodyWrapper^>()),
-  static_rigid_bodies_(gcnew Dictionary<int, RigidBodyWrapper^>())
+  rigid_bodies_(gcnew Dictionary<int, RigidBodyWrapper^>())/*,
+  static_rigid_bodies_(gcnew Dictionary<int, RigidBodyWrapper^>())*/
 {
   if (info_->solver_info_->debug_)
   {
@@ -65,7 +65,7 @@ void Session::initialize(void)
   std::cout << "Session::initialize() start." << std::endl;
 
   rigid_bodies_->Clear();
-  static_rigid_bodies_->Clear();
+//  static_rigid_bodies_->Clear();
   bullet_instance_->initialize();
 
   std::cout << "Session::initialize() end." << std::endl;
@@ -76,7 +76,7 @@ void Session::deinitialize(void)
   std::cout << "Session::deinitialize() start." << std::endl;
 
   rigid_bodies_->Clear();
-  static_rigid_bodies_->Clear();
+//  static_rigid_bodies_->Clear();
 
   std::cout << "Session::deinitialize() end." << std::endl;
 }
@@ -181,26 +181,26 @@ bool Session::addRigidBody(int i, RigidBodyWrapper^ _rigid_body)
 
   return false;
 }
-bool Session::addStaticRigidBody(int i, RigidBodyWrapper^ _static_rigid_body)
-{
-  if (bullet_instance_)
-  {
-    if (static_rigid_bodies_->ContainsKey(i))
-    {
-      std::cout << "key exists. : " << i << std::endl;
-      return false;
-    }
-
-    static_rigid_bodies_->Add(i, _static_rigid_body);
-    bullet_instance_->addStaticRigidBody(_static_rigid_body->rigid_body_);
-
-    std::cout << "static rigid body added : #" << i << std::endl;
-
-    return true;
-  }
-
-  return false;
-}
+//bool Session::addStaticRigidBody(int i, RigidBodyWrapper^ _static_rigid_body)
+//{
+//  if (bullet_instance_)
+//  {
+//    if (static_rigid_bodies_->ContainsKey(i))
+//    {
+//      std::cout << "key exists. : " << i << std::endl;
+//      return false;
+//    }
+//
+//    static_rigid_bodies_->Add(i, _static_rigid_body);
+//    bullet_instance_->addStaticRigidBody(_static_rigid_body->rigid_body_);
+//
+//    std::cout << "static rigid body added : #" << i << std::endl;
+//
+//    return true;
+//  }
+//
+//  return false;
+//}
 //Rhino::Geometry::Transform Session::getRigidBodyTransform(int i)
 //{
 //  if (bullet_instance_)
